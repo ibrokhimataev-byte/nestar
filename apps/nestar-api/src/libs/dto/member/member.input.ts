@@ -24,7 +24,7 @@ export class MemberInput {
 
 	@IsOptional()
 	@Field(() => MemberAuthType, { nullable: true })
-	MemberAuthType?: MemberAuthType;
+	memberAuthType?: MemberAuthType;
 }
 
 @InputType()

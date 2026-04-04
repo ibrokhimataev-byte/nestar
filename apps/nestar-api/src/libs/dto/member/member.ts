@@ -27,11 +27,11 @@ export class Member {
 	@Field(() => String, { nullable: true })
 	memberFullName?: string;
 
-	@Field(() => String)
+	@Field( () => String, { nullable: true })
 	memberImage?: string;
 
 	@Field(() => String, { nullable: true })
-	memberAdress?: string;
+	memberAddress?: string;
 
 	@Field(() => String, { nullable: true })
 	memberDesc?: string;
