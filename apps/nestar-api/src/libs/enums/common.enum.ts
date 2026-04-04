@@ -18,4 +18,5 @@ export enum Message {
 	ONLY_SPECIFIC_ROLES_ALLOWED = 'Only specific role can access this resource!',
 	NOT_ALLOWED_FORMAT = 'You are not allowed to access this resource!',
 	SELF_SUBSCRIPTION_DENIED = 'You cannot subscribe to yourself!',
+    NO_MEMBER_NICK_OR_PASSWORD = "NO_MEMBER_NICK_OR_PASSWORD",
 }

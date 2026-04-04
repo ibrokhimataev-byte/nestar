@@ -14,6 +14,8 @@ export enum MemberStatus {
 	AGENT = 'BLOCK',
 	ADMIN = 'DELETE',
     ACTIVE = "ACTIVE",
+    DELETE = "DELETE",
+    BLOCK = "BLOCK",
 }
 
 registerEnumType(MemberStatus, {
