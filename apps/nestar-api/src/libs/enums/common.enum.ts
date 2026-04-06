@@ -8,11 +8,11 @@ export enum Message {
 	UNAUTHORIZED = 'Unauthorized, Please login first!',
 	FORBIDDEN = "Forbidden, You don't have permission to access this resource!",
 
-	USED_NICK_PHONE = 'You are inserting already used nick or phone!',
+	USED_MEMBER_NICK_OR_PHONE = 'You are inserting already used nick or phone!',
 	TOKEN_CREATION_FAILED = 'Token creation failed, Please try again!',
 	NO_MEMBER_NICK = 'NO member with that member nick!',
 	BLOCKED_USER = 'You have been blocked, contact restaurant',
-	WRONG_PSSWORD = 'Wrong password, pleace try again!',
+	WRONG_PASSWORD = 'Wrong password, pleace try again!',
 	NOT_AUTHENTICATED = 'You are not authenticated, Please login first!',
 	TOKEN_NOT_EXIST = 'Token does not exist, Please login first!',
 	ONLY_SPECIFIC_ROLES_ALLOWED = 'Only specific role can access this resource!',
