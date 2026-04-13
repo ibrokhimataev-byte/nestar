@@ -14,9 +14,8 @@ export class ViewService {
         const viewExist = await this.checkViewExtence(input);
         if(!viewExist) {
             console.log("-New View Insert-");
-            return await this.viewModel.create(input)
-        }
-       return null;
+             return await this.viewModel.create(input);
+        }else return null;
     }
 
     private async checkViewExtence(input: ViewInput): Promise<View | null>{ //privatega sabab bu method faqat shu klass ichida ishga tushadi

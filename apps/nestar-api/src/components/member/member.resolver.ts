@@ -1,7 +1,7 @@
 import { Mutation, Resolver, Query, Args } from '@nestjs/graphql';
 import { MemberService } from './member.service';
-import { LoginInput, MemberInput } from '../../libs/dto/member/member.input';
-import { Member } from '../../libs/dto/member/member';
+import { AgentInquiry, LoginInput, MemberInput } from '../../libs/dto/member/member.input';
+import { Member, Members } from '../../libs/dto/member/member';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { AuthMember } from '../auth/decorators/authMember.decorator';
@@ -64,6 +64,13 @@ export class MemberResolver {
 		const targetId = shapeIntoMongoObjectId(input);
 		 return this.memberService.getMember(memberId, targetId);
 	}
+
+	 @UseGuards(WithoutGuard) //agentlar royxatini butun malumotlar bilan birgalikda olib beradi
+    @Query(() => Members)
+    public async getAgents(@Args("input") input: AgentInquiry, @AuthMember('_id') memberId: mongoose.ObjectId): Promise<Members>{
+        console.log("Query getAgents")
+        return this.memberService.getAgents(memberId, input);
+    }
 	/** ADMIN **/
 
 	@Roles(MemberType.ADMIN)
