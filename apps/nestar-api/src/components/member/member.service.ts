@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException } from '@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { Member, Members } from '../../libs/dto/member/member';
-import { AgentInquiry, LoginInput, MemberInput } from '../../libs/dto/member/member.input';
+import { AgentInquiry, LoginInput, MemberInput, MembersInquiry } from '../../libs/dto/member/member.input';
 import { MemberStatus, MemberType } from '../../libs/enums/member.enum';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { AuthService } from '../auth/auth.service';
@@ -91,34 +91,65 @@ export class MemberService {
 		return targetMember;
 	}
 
-	 public async getAgents(memberId: ObjectId, input:AgentInquiry ): Promise<Members> {
-        const {text} = input.search;
-        const match:T = {memberType: MemberType.AGENT, memberStatus: MemberStatus.ACTIVE};
-        const sort:T = {[input?.sort ?? "createdAt"]: input.direction ?? Direction.DESC} //sort optionalligi sababli agar kiritilmagan bolsa createdAt avtomatik tanlanadi
-        
-        if(text) match.memberNick = {$regex: new RegExp(text, "i")};
-        console.log("match", match)
+	public async getAgents(memberId: ObjectId, input: AgentInquiry): Promise<Members> {
+		const { text } = input.search;
+		const match: T = { memberType: MemberType.AGENT, memberStatus: MemberStatus.ACTIVE };
+		const sort: T = { [input?.sort ?? 'createdAt']: input.direction ?? Direction.DESC }; //sort optionalligi sababli agar kiritilmagan bolsa createdAt avtomatik tanlanadi
 
-        const result = await this.memberModel.aggregate([ //aggregate pipelardan iborat bolib objectlardan iborat array qabul qiladi
-            {$match: match},
-            {$sort: sort},
-            {
-               $facet: { //bir aggregate ichida bir nechta query natijalarini olish imkonini beradi
-                list: [{$skip: (input.page - 1)* input.limit}, {$limit: input.limit }], //talab etilgan agentlar royxatini olib beradi
-                metaCounter: [{$count: "total"}] //agentlar umumiy sonini hisoblaymiz
-               }
-            }
-        ]).exec()
-        console.log("result:",result)
-        if(!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND)
-        return result[0];
-    }
+		if (text) match.memberNick = { $regex: new RegExp(text, 'i') };
+		console.log('match', match);
 
-	public async getAllMembersByAdmin(): Promise<string> {
-		return 'getAllMembersByAdmin executed!';
+		const result = await this.memberModel
+			.aggregate([
+				//aggregate pipelardan iborat bolib objectlardan iborat array qabul qiladi
+				{ $match: match },
+				{ $sort: sort },
+				{
+					$facet: {
+						//bir aggregate ichida bir nechta query natijalarini olish imkonini beradi
+						list: [{ $skip: (input.page - 1) * input.limit }, { $limit: input.limit }], //talab etilgan agentlar royxatini olib beradi
+						metaCounter: [{ $count: 'total' }], //agentlar umumiy sonini hisoblaymiz
+					},
+				},
+			])
+			.exec();
+		console.log('result:', result);
+		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+		return result[0];
 	}
 
-	public async updateMemberByAdmin(): Promise<string> {
-		return 'updateMemberByAdmin executed!';
+	public async getAllMembersByAdmin(input: MembersInquiry): Promise<Members> {
+		const { memberStatus, memberType, text } = input.search;
+		const match: T = {};
+		const sort: T = { [input?.sort ?? 'createdAt']: input.direction ?? Direction.DESC }; //sort optionalligi sababli agar kiritilmagan bolsa createdAt avtomatik tanlanadi
+		if (memberStatus) match.memberStatus = memberStatus;
+		if (memberType) match.memberType = memberType;
+		if (text) match.memberNick = { $regex: new RegExp(text, 'i') };
+		console.log('match', match);
+
+		const result = await this.memberModel
+			.aggregate([
+				//aggregate pipelardan iborat bolib objectlardan iborat array qabul qiladi
+				{ $match: match },
+				{ $sort: sort },
+				{
+					$facet: {
+						//bir aggregate ichida bir nechta query natijalarini olish imkonini beradi
+						list: [{ $skip: (input.page - 1) * input.limit }, { $limit: input.limit }], //talab etilgan agentlar royxatini olib beradi
+						metaCounter: [{ $count: 'total' }], //agentlar umumiy sonini hisoblaymiz
+					},
+				},
+			])
+			.exec();
+		console.log('result:', result);
+		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+
+		return result[0];
+	}
+
+	public async updateMemberByAdmin(input: MemberUpdate): Promise<Member> {
+		const result = await this.memberModel.findOneAndUpdate({ _id: input._id }, input, { new: true }).exec();
+		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
+		return result;
 	}
 }
