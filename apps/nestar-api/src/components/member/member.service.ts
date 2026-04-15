@@ -7,7 +7,7 @@ import { MemberStatus, MemberType } from '../../libs/enums/member.enum';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { AuthService } from '../auth/auth.service';
 import { MemberUpdate } from '../../libs/dto/member/member.update';
-import { T } from '../../libs/types.ts/common';
+import { StatisticModifier, T } from '../../libs/types.ts/common';
 import { ViewService } from '../view/view.service';
 import { ViewGroup } from '../../libs/enums/view.enum';
 import { ViewInput } from '../../libs/dto/view/view.input';
@@ -151,5 +151,13 @@ export class MemberService {
 		const result = await this.memberModel.findOneAndUpdate({ _id: input._id }, input, { new: true }).exec();
 		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 		return result;
+	}
+
+	public async memberStatsEditor(input: StatisticModifier): Promise<Member> {
+		//memberga dahldor kerakli qiymatni ozgartirish imkonini beruvchi method
+		const { _id, targetKey, modifier } = input;
+		return (await this.memberModel
+			.findOneAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true })
+			.exec()) as Member; //masalan {memberProperties: 1}
 	}
 }

@@ -1,9 +1,29 @@
-import { Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { PropertyService } from './property.service';
+import { Property } from '../../libs/dto/property/property';
+
+import { Roles } from '../auth/decorators/roles.decorator';
+import { UseGuards } from '@nestjs/common';
+import { MemberType } from '../../libs/enums/member.enum';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { AuthMember } from '../auth/decorators/authMember.decorator';
+import * as mongoose from 'mongoose';
+import { PropertyInput } from '../../libs/dto/property/property.input';
 
 @Resolver()
 export class PropertyResolver {
-    constructor(private readonly propertyService: PropertyService) {}
+	constructor(private readonly propertyService: PropertyService) {}
 
-    
+	@Roles(MemberType.AGENT)
+	@UseGuards(RolesGuard)
+	@Mutation(() => Property)
+	public async createProperty(
+		@Args('input') input: PropertyInput,
+		@AuthMember('_id') memberId: mongoose.ObjectId,
+	): Promise<Property> {
+		console.log('mutation: createProperty');
+		input.memberId = memberId;
+
+		return await this.propertyService.createProperty(input);
+	}
 }
