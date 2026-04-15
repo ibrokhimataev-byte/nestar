@@ -8,6 +8,8 @@ import { AppResolver } from './app.resolver';
 import { ComponentsModule } from './components/components.module';
 import { DatabaseModule } from './database/database.module';
 import { T } from './libs/types.ts/common';
+import { PropertyModule } from './components/property/property.module';
+import { PropertyService } from './components/property/property.service';
 
 @Module({
   imports: [
@@ -27,7 +29,7 @@ import { T } from './libs/types.ts/common';
       }
     }), 
     ComponentsModule, //components moduleda member, property va h.k modullerni tashkillashtiramiz.ularni components module umumlasjtiradi.components ni esa asosiy app.modulega import qilib oldik
-    DatabaseModule], //Databasega ulanish mantigi yozilgan module.Uni alohida tashkillashtirdik sababi loyiha ishga tushganda databasega connect 1 marta amalga oshadi va yakunlanadi
+    DatabaseModule, PropertyModule], //Databasega ulanish mantigi yozilgan module.Uni alohida tashkillashtirdik sababi loyiha ishga tushganda databasega connect 1 marta amalga oshadi va yakunlanadi
   controllers: [AppController],
   providers: [AppService, AppResolver],
 })
