@@ -3,6 +3,15 @@ import { ObjectId } from 'bson';
 export const availableAgentSorts = ["createdAt", "updatedAt", "memberLikes", "memberViews", "memberRank"];
 export const availableMemberSorts = ["createdAt", "updatedAt", "memberLikes", "memberViews"]; //admin jami userlarni sort qiladi
 
+export const availableOptions = ['propertyBarter', 'propertyRent'];
+export const availablePropertySorts = [
+	'createdAt',
+	'updatedAt',
+	'propertyLikes',
+	'propertyViews',
+	'propertyRank',
+	'propertyPrice',
+];
 
  /**  IMAGE CONFIGURATION **/
 import { v4 as uuidv4 } from 'uuid';
@@ -16,5 +25,14 @@ export const getSerialForImage = (filename: string) => {
 
 export const shapeIntoMongoObjectId = (target: any) => {
     return typeof target === "string" ? new ObjectId(target) : target;
+};
+
+export const lookupMember = {
+	$lookup: {
+		from: 'members',
+		localField: 'memberId',
+		foreignField: '_id',
+		as: 'memberData',
+	},
 };
   
