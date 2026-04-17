@@ -1,11 +1,13 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
 import * as mongoose from "mongoose";
 import { PropertyLocation, PropertyStatus, PropertyType } from "../../enums/property.enum";
+import { Member } from "../member/member";
+import { ObjectId } from "mongoose";
 
 @ObjectType()
 export class Property{
     @Field(() => String) //Field bu return boladigan resultni typeni tekshirib beradi
-    _id: mongoose.Types.ObjectId;
+    _id: ObjectId;
 
    @Field(() => PropertyType)
    propertyType: PropertyType
@@ -75,4 +77,7 @@ export class Property{
 
     @Field(() => Date ) 
     updatedAt: Date;
+
+    @Field(() => Member, {nullable: true} )
+    memberData?: Member;
 }
