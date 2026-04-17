@@ -4,7 +4,12 @@ import { Model, ObjectId } from 'mongoose';
 import { Member } from '../../libs/dto/member/member';
 import { Properties, Property } from '../../libs/dto/property/property';
 import { MemberService } from '../member/member.service';
-import { AgentPropertiesInquiry, AllPropertiesInquiry, PropertiesInquiry, PropertyInput } from '../../libs/dto/property/property.input';
+import {
+	AgentPropertiesInquiry,
+	AllPropertiesInquiry,
+	PropertiesInquiry,
+	PropertyInput,
+} from '../../libs/dto/property/property.input';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { ViewService } from '../view/view.service';
 import { PropertyStatus } from '../../libs/enums/property.enum';
@@ -189,7 +194,6 @@ export class PropertyService {
 		return result[0];
 	}
 
-
 	public async getAllPropertiesByAdmin(input: AllPropertiesInquiry): Promise<Properties> {
 		const { propertyStatus, propertyLocationList } = input.search;
 		const match: T = {};
@@ -229,7 +233,6 @@ export class PropertyService {
 		return result[0];
 	}
 
-
 	public async updatePropertyByAdmin(input: PropertyUpdate): Promise<Property> {
 		let { propertyStatus, soldAt, deletedAt } = input;
 		const search: T = {
@@ -259,6 +262,17 @@ export class PropertyService {
 				targetKey: 'memberProperties',
 				modifier: -1,
 			});
+		}
+
+		return result;
+	}
+
+	public async removePropertyByAdmin(propertyId: ObjectId): Promise<Property> {
+		const search: T = { _id: propertyId, propertyStatus: PropertyStatus.DELETE };
+		const result = await this.propertyModel.findOneAndDelete(search).exec();
+
+		if (!result) {
+			throw new InternalServerErrorException(Message.REMOVE_FAILED);
 		}
 
 		return result;
