@@ -1,19 +1,22 @@
-import { ObjectId } from 'bson';
+import {ObjectId} from "bson"
 
-export const availableAgentSorts = ["createdAt", "updatedAt", "memberLikes", "memberViews", "memberRank"];
+export const availableAgentSorts = ["createdAt", "updatedAt", "memberLikes", "memberViews", "memberRank"]; //user agentlarni sort qiladi
 export const availableMemberSorts = ["createdAt", "updatedAt", "memberLikes", "memberViews"]; //admin jami userlarni sort qiladi
 
 export const availableOptions = ['propertyBarter', 'propertyRent'];
 export const availablePropertySorts = [
-	'createdAt',
-	'updatedAt',
-	'propertyLikes',
-	'propertyViews',
-	'propertyRank',
-	'propertyPrice',
+ 'createdAt',
+ 'updatedAt',
+ 'propertyLikes',
+ 'propertyViews',
+ 'propertyRank',
+ 'propertyPrice',
 ];
 
- /**  IMAGE CONFIGURATION **/
+export const availableCommentSorts = ["createdAt", "updatedAt"]
+
+export const availableBoardArticleSorts = ['createdAt', 'updatedAt', 'articleLikes', 'articleViews']
+ // IMAGE CONFIGURATION (config.js)
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
 
@@ -23,16 +26,17 @@ export const getSerialForImage = (filename: string) => {
 	return uuidv4() + ext;
 };
 
-export const shapeIntoMongoObjectId = (target: any) => {
+export const shapeIntoMongoObjectId = (target:any) => {
     return typeof target === "string" ? new ObjectId(target) : target;
 };
 
-export const lookupMember = {
-	$lookup: {
-		from: 'members',
-		localField: 'memberId',
-		foreignField: '_id',
-		as: 'memberData',
-	},
-};
-  
+export const lookupMember = [
+ {
+  $lookup: {
+   from: 'members',
+   localField: 'memberId',
+   foreignField: '_id',
+   as: 'memberData',
+  },
+ },
+];
