@@ -160,4 +160,6 @@ export class MemberService {
 			.findByIdAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true })
 			.exec()) as Member; //masalan {memberProperties: 1}
 	}
+
+	
 }
