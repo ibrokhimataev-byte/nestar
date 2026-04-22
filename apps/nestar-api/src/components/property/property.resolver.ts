@@ -8,11 +8,17 @@ import { MemberType } from '../../libs/enums/member.enum';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { AuthMember } from '../auth/decorators/authMember.decorator';
 import * as mongoose from 'mongoose';
-import { AgentPropertiesInquiry, AllPropertiesInquiry, PropertiesInquiry, PropertyInput } from '../../libs/dto/property/property.input';
+import {
+	AgentPropertiesInquiry,
+	AllPropertiesInquiry,
+	PropertiesInquiry,
+	PropertyInput,
+} from '../../libs/dto/property/property.input';
 import { WithoutGuard } from '../auth/guards/without.guard';
 import { shapeIntoMongoObjectId } from '../../libs/config';
 import { ObjectId } from 'mongoose';
 import { PropertyUpdate } from '../../libs/dto/property/property.update';
+import { AuthGuard } from '../auth/guards/auth.guard';
 
 @Resolver()
 export class PropertyResolver {
@@ -75,7 +81,17 @@ export class PropertyResolver {
 		return await this.propertyService.getAgentProperties(memberId, input);
 	}
 
-    
+	@UseGuards(AuthGuard)
+	@Mutation(() => Property)
+	public async likeTargetProperty(
+		@Args('propertyId') input: string,
+		@AuthMember('_id') memberId: mongoose.ObjectId,
+	): Promise<Property> {
+		console.log('Mutation: likeTargetMember');
+		const likeRefId = shapeIntoMongoObjectId(input);
+		return await this.propertyService.likeTargetProperty(memberId, likeRefId);
+	}
+
 	// ** Admin    **//
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
@@ -85,7 +101,6 @@ export class PropertyResolver {
 		return await this.propertyService.getAllPropertiesByAdmin(input);
 	}
 
-
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
 	@Mutation((returns) => Property)
@@ -94,7 +109,6 @@ export class PropertyResolver {
 		input._id = shapeIntoMongoObjectId(input._id);
 		return await this.propertyService.updatePropertyByAdmin(input);
 	}
-
 
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
