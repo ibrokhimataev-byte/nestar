@@ -45,6 +45,7 @@ export class BoardArticleResolver {
 	@UseGuards(AuthGuard)
 	@Mutation(() => BoardArticle)
 	public async updateBoardArticle(
+		//user ozi yozgan articleni update qiladi
 		@Args('input') input: BoardArticleUpdate,
 		@AuthMember('_id') memberId: mongoose.ObjectId,
 	): Promise<BoardArticle> {
@@ -62,8 +63,6 @@ export class BoardArticleResolver {
 		console.log('Query: getBoardArticles');
 		return await this.boardArticleService.getBoardArticles(memberId, input);
 	}
-
-	// ADMIN
 
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)

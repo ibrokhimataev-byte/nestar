@@ -23,6 +23,7 @@ export class CommentResolver {
 		@Args('input') input: CommentInput,
 		@AuthMember('_id') memberId: mongoose.ObjectId,
 	): Promise<Comment> {
+        console.log(input)
 		console.log('Mutation: createComment');
 		return await this.commentService.createComment(memberId, input);
 	}
