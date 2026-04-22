@@ -5,14 +5,16 @@ import { MongooseModule } from '@nestjs/mongoose';
 import MemberSchema from '../../schemas/Member.model';
 import { AuthModule } from '../auth/auth.module';
 import { ViewModule } from '../view/view.module';
+import { LikeModule } from '../like/like.module';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: "Member", schema: MemberSchema }]),
-    forwardRef(() => AuthModule), // <--- AuthModule shu yerda bo'lishi shart
-    ViewModule,
-  ],
-  providers: [MemberResolver, MemberService],
-  exports: [MemberService],
+	imports: [
+		MongooseModule.forFeature([{ name: 'Member', schema: MemberSchema }]),
+		forwardRef(() => AuthModule), // <--- AuthModule shu yerda bo'lishi shart
+		ViewModule,
+		LikeModule,
+	],
+	providers: [MemberResolver, MemberService],
+	exports: [MemberService],
 })
 export class MemberModule {}
