@@ -1,13 +1,17 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Schema } from 'mongoose';
 import { Like } from '../../libs/dto/like/like';
 import { LikeInput } from '../../libs/dto/like/like.input';
 import { T } from '../../libs/types.ts/common';
 import { Message } from '../../libs/enums/common.enum';
+import { LikeGroup } from '../../libs/enums/like.enum';
 
 @Injectable()
 export class LikeService {
+    checkLikeExistence(likeInput: { memberId: Schema.Types.ObjectId; likeRefId: Schema.Types.ObjectId; likeGroup: LikeGroup; }): any {
+        throw new Error('Method not implemented.');
+    }
 	constructor(@InjectModel('Like') private readonly likeModel: Model<Like>) {}
 
 	public async toggleLike(input: LikeInput): Promise<number> {
