@@ -6,11 +6,14 @@ import MemberSchema from '../../schemas/Member.model';
 import { AuthModule } from '../auth/auth.module';
 import { ViewModule } from '../view/view.module';
 import { LikeModule } from '../like/like.module';
+import { FollowModule } from '../follow/follow.module';
+import FollowSchema from '../../schemas/Follow.model';
 
 @Module({
 	imports: [
 		MongooseModule.forFeature([{ name: 'Member', schema: MemberSchema }]),
-		forwardRef(() => AuthModule), // <--- AuthModule shu yerda bo'lishi shart
+		MongooseModule.forFeature([{ name: "Follow", schema: FollowSchema }]),
+    AuthModule,
 		ViewModule,
 		LikeModule,
 	],
