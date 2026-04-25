@@ -1,11 +1,12 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { Model, ObjectId, Schema } from 'mongoose';
 import { Properties, Property } from '../../libs/dto/property/property';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import {
 	AgentPropertiesInquiry,
 	AllPropertiesInquiry,
+	OrdinaryInquiry,
 	PropertiesInquiry,
 	PropertyInput,
 } from '../../libs/dto/property/property.input';
@@ -15,7 +16,7 @@ import { PropertyStatus } from '../../libs/enums/property.enum';
 import { ViewGroup } from '../../libs/enums/view.enum';
 import { ViewService } from '../view/view.service';
 import { PropertyUpdate } from '../../libs/dto/property/property.update';
-import {lookupAuthMemberLiked, lookupMember, shapeIntoMongoObjectId } from '../../libs/config';
+import { lookupAuthMemberLiked, lookupMember, shapeIntoMongoObjectId } from '../../libs/config';
 import { StatisticModifier, T } from '../../libs/types.ts/common';
 import { LikeInput } from '../../libs/dto/like/like.input';
 import { LikeGroup } from '../../libs/enums/like.enum';
@@ -158,6 +159,10 @@ export class PropertyService {
 				return { [ele]: true };
 			});
 		}
+	}
+
+	public async getFavorites(memberId: Schema.Types.ObjectId, input: OrdinaryInquiry): Promise<Properties> {
+		return await this.likeService.getFavoriteProperties(memberId, input);
 	}
 
 	public async getAgentProperties(memberId: ObjectId, input: AgentPropertiesInquiry): Promise<Properties> {

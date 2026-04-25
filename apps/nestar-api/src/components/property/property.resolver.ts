@@ -11,12 +11,13 @@ import * as mongoose from 'mongoose';
 import {
 	AgentPropertiesInquiry,
 	AllPropertiesInquiry,
+	OrdinaryInquiry,
 	PropertiesInquiry,
 	PropertyInput,
 } from '../../libs/dto/property/property.input';
 import { WithoutGuard } from '../auth/guards/without.guard';
 import { shapeIntoMongoObjectId } from '../../libs/config';
-import { ObjectId } from 'mongoose';
+import { ObjectId, Schema } from 'mongoose';
 import { PropertyUpdate } from '../../libs/dto/property/property.update';
 import { AuthGuard } from '../auth/guards/auth.guard';
 
@@ -68,6 +69,16 @@ export class PropertyResolver {
 	): Promise<Properties> {
 		console.log('Query: getProperties');
 		return await this.propertyService.getProperties(memberId, input);
+	}
+
+	@UseGuards(AuthGuard)
+	@Query((returns) => Properties)
+	public async getFavorites(
+		@Args('input') input: OrdinaryInquiry, // input dan kelayotgan data
+		@AuthMember('_id') memberId: Schema.Types.ObjectId, //ro'yxatdan o'tgan user bo'sa memberId sini olib beradi
+	): Promise<Properties> {
+		console.log('Query: getFavorites');
+		return await this.propertyService.getFavorites(memberId, input);
 	}
 
 	@Roles(MemberType.AGENT)
